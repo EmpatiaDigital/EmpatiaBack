@@ -24,7 +24,9 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use("/descargas", express.static(path.join(__dirname, "public/descargas")));
 // Rutas
-// app.use('/api', testRoutes);
+app.use("/api/test", (req, res) => {
+  res.json({ message: "Hola desde el backend 👋" });
+});
 app.use('/api', changePassword);
 app.use('/api/auth', authRoutes);
 app.use('/api',sociosRoutes);
