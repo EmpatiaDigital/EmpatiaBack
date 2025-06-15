@@ -32,8 +32,7 @@ const login = async (req, res) => {
         username: user.username,
       };
 
-      const token = jwt.encode(payload, process.env.JWT_SECRET);
-
+         const token = jwt.encode(payload, "dsafSDf1ASDF3aDf211221af21sad2f1asd12");
       // Siempre devolver avatar desde socio
       const avatarUrl = (socio.avatar && socio.avatar.startsWith('http'))
         ? socio.avatar
