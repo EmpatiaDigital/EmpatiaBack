@@ -10,6 +10,7 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const routesActividades = require('./routes/routesActividades');
 const activeRoutes = require('./routes/activeRoutes');
 const descargaRoutes = require('./routes/descargaRoutes');
+const testRoute = require('./routes/testRoute');
 const path = require("path");
 
 
