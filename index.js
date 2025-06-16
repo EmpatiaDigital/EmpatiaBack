@@ -12,7 +12,7 @@ const activeRoutes = require('./routes/activeRoutes');
 const descargaRoutes = require('./routes/descargaRoutes');
 const testRoute = require('./routes/testRoute');
 const path = require("path");
-
+const userActividadRoutes = require('./routes/userActividad');
 
 // Usamos las rutas
 dotenv.config();
@@ -35,6 +35,7 @@ app.use('/api', uploadRoutes);
 app.use('/api', activeRoutes);
 app.use('/api/actividades', routesActividades);
 app.use('/api/descarga', descargaRoutes);
+app.use('/api', userActividadRoutes);
 
 
 // Conexión a la base de datos
