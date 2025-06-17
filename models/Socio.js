@@ -8,7 +8,7 @@ const socioSchema = new mongoose.Schema({
   provincia: { type: String, required: true, default: "no registrado" },
   ciudad: { type: String, required: true },
   numeroSocio: { type: Number, required: true, unique: true },
-  role: { type: String, default: 'socio' },
+  role: { type: String, default: 'no socio' },
   cuota: { type: Number, default: 12 },
   avatar: { type: String },
   active: { type: Boolean, default: true },
