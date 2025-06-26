@@ -38,6 +38,53 @@ app.use('/api/descarga', descargaRoutes);
 app.use('/api', userActividadRoutes);
 
 
+// Ruta para compartir un post con metadatos
+app.get("/post/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const Post = require('./models/Post'); // Asegurate que tengas este modelo
+    const post = await Post.findById(id);
+
+    if (!post) return res.status(404).send("Post no encontrado");
+
+    const html = `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="utf-8" />
+        <title>${post.titulo} | Empatía Digital</title>
+        <meta name="description" content="${post.epigrafe || ""}" />
+
+        <!-- Open Graph -->
+        <meta property="og:title" content="${post.titulo}" />
+        <meta property="og:description" content="${post.epigrafe || ""}" />
+        <meta property="og:image" content="${post.portada}" />
+        <meta property="og:url" content="https://empatiadigital.com.ar/post/${post._id}" />
+        <meta property="og:type" content="article" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="${post.titulo}" />
+        <meta name="twitter:description" content="${post.epigrafe || ""}" />
+        <meta name="twitter:image" content="${post.portada}" />
+      </head>
+      <body>
+        <script>
+          window.location.href = "/#/post/${post._id}";
+        </script>
+      </body>
+      </html>
+    `;
+
+    res.send(html);
+  } catch (error) {
+    console.error("Error al obtener post para metadatos:", error);
+    res.status(500).send("Error interno del servidor");
+  }
+});
+
+
 // Conexión a la base de datos
 mongoose.connect("mongodb+srv://empatiadigital2025:Gali282016@empatia.k2mcalb.mongodb.net/?retryWrites=true&w=majority&appName=Empatia", { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Conectado a MongoDB'))
