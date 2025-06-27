@@ -68,7 +68,7 @@ app.get("/post/:id", async (req, res) => {
           <meta property="og:title" content="${post.titulo}" />
           <meta property="og:description" content="${post.epigrafe || ''}" />
           <meta property="og:image" content="${post.portada}" />
-          <meta property="og:url" content="https://www.empatiadigital.com.ar/post/${post._id}" />
+          <meta property="og:url" content="https://empatia-front.vercel.app/post/${post._id}" />
           <meta property="og:type" content="article" />
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="${post.titulo}" />
@@ -84,7 +84,7 @@ app.get("/post/:id", async (req, res) => {
       return res.send(html);
     } else {
       // Para usuarios humanos: redirigí a la app React que maneja /post/:id
-      return res.redirect(`https://www.empatiadigital.com.ar/app/post/${post._id}`);
+      return res.redirect(`https://empatia-front.vercel.app/post/${post._id}`);
       // Cambiá "/app/#/post/" por la ruta real que usás en React para mostrar el post
     }
   } catch (error) {
