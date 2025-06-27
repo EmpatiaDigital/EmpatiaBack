@@ -48,10 +48,10 @@ mongoose.connect("mongodb+srv://empatiadigital2025:Gali282016@empatia.k2mcalb.mo
 // -----------------------------
 // RUTA ESPECIAL PARA METADATOS (LINK PREVIEW)
 // -----------------------------
-app.get("preview/post/:id", async (req, res) => {
+app.get("/preview/post/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).send("No encontrado en este backend por el momento");
+    if (!post) return res.status(404).send("Post no encontrado");
 
     const frontendUrl = `https://empatia-front.vercel.app/post/${post.id}`;
 
@@ -71,15 +71,23 @@ app.get("preview/post/:id", async (req, res) => {
         <meta name="twitter:title" content="${post.titulo}" />
         <meta name="twitter:description" content="${post.epigrafe || ''}" />
         <meta name="twitter:image" content="${post.portada}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+          body { font-family: sans-serif; padding: 2rem; }
+          .card { border: 1px solid #ccc; padding: 2rem; border-radius: 12px; max-width: 600px; margin: auto; }
+          .card img { max-width: 100%; border-radius: 8px; }
+          .card h1 { font-size: 1.5rem; margin-top: 1rem; }
+          .card p { font-size: 1rem; color: #444; }
+          .card a { display: inline-block; margin-top: 1rem; text-decoration: none; color: white; background: #0077cc; padding: 0.5rem 1rem; border-radius: 6px; }
+        </style>
       </head>
       <body>
-        <script>
-          window.location.href = "${frontendUrl}";
-        </script>
-        <noscript>
-          <meta http-equiv="refresh" content="0; url=${frontendUrl}" />
-        </noscript>
-        <h1>Redirigiendo a Empatía Digital...</h1>
+        <div class="card">
+          <img src="${post.portada}" alt="Imagen del post" />
+          <h1>${post.titulo}</h1>
+          <p>${post.epigrafe || ''}</p>
+          <a href="${frontendUrl}">Leer en Empatía Digital</a>
+        </div>
       </body>
       </html>
     `;
@@ -91,6 +99,7 @@ app.get("preview/post/:id", async (req, res) => {
     return res.status(500).send("Error del servidor");
   }
 });
+
 
 
 // Puerto
