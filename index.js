@@ -48,16 +48,16 @@ mongoose.connect("mongodb+srv://empatiadigital2025:Gali282016@empatia.k2mcalb.mo
 // -----------------------------
 // RUTA ESPECIAL PARA METADATOS (LINK PREVIEW)
 // -----------------------------
+
 app.get("/post/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).send("No encontrado");
 
     const userAgent = req.headers['user-agent'] || "";
-    const isBot = /facebook|twitter|whatsapp|discord|slack|telegram/i.test(userAgent);
+    const isBot = /facebook|twitter|whatsapp|discord|slack|telegram/i.test(userAgent.toLowerCase());
 
     if (isBot) {
-      // Para bots: enviá meta tags con la info del post
       const html = `
         <!DOCTYPE html>
         <html lang="es">
@@ -83,15 +83,15 @@ app.get("/post/:id", async (req, res) => {
       res.setHeader('Content-Type', 'text/html');
       return res.send(html);
     } else {
-      // Para usuarios humanos: redirigí a la app React que maneja /post/:id
-      return res.redirect(`https://empatia-front.vercel.app/post/${post._id}`);
-      // Cambiá "/app/#/post/" por la ruta real que usás en React para mostrar el post
+      // Para usuarios normales redirigimos a SPA React
+      return res.redirect(`https://empatia-front.vercel.app/app/post/${post._id}`);
     }
   } catch (error) {
     console.error(error);
     return res.status(500).send("Error del servidor");
   }
 });
+
 
 
 // Puerto
