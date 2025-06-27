@@ -49,50 +49,41 @@ mongoose.connect("mongodb+srv://empatiadigital2025:Gali282016@empatia.k2mcalb.mo
 // RUTA ESPECIAL PARA METADATOS (LINK PREVIEW)
 // -----------------------------
 
-app.get("/post/:id", async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).send("No encontrado papu este seria el de prueba el backend");
+const userAgent = req.headers['user-agent'] || "";
+const isBot = /facebook|twitter|whatsapp|discord|slack|telegram|linkedin|bot|crawler|spider/i.test(userAgent.toLowerCase());
 
-    const userAgent = req.headers['user-agent'] || "";
-    const isBot = /facebook|twitter|whatsapp|discord|slack|telegram/i.test(userAgent.toLowerCase());
-
-    if (isBot) {
-      const html = `
-        <!DOCTYPE html>
-        <html lang="es">
-        <head>
-          <meta charset="UTF-8" />
-          <title>${post.titulo}</title>
-          <meta name="description" content="${post.epigrafe || ''}" />
-          <meta property="og:title" content="${post.titulo}" />
-          <meta property="og:description" content="${post.epigrafe || ''}" />
-          <meta property="og:image" content="${post.portada}" />
-          <meta property="og:url" content="https://empatia-front.vercel.app/post/${post._id}" />
-          <meta property="og:type" content="article" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="${post.titulo}" />
-          <meta name="twitter:description" content="${post.epigrafe || ''}" />
-          <meta name="twitter:image" content="${post.portada}" />
-        </head>
-        <body>
-          <h1>Redirigiendo...</h1>
-        </body>
-        </html>
-      `;
-      res.setHeader('Content-Type', 'text/html');
-      return res.send(html);
-    } else {
-      // Para usuarios normales redirigimos a SPA React
-      return res.redirect(`https://empatia-front.vercel.app/app/post/${post._id}`);
-    }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Error del servidor");
-  }
-});
-
-
+if (isBot) {
+  // Responde con HTML y meta tags (para el preview)
+  const html = `<!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8" />
+      <title>${post.titulo}</title>
+      <meta name="description" content="${post.epigrafe || ''}" />
+      <meta property="og:title" content="${post.titulo}" />
+      <meta property="og:description" content="${post.epigrafe || ''}" />
+      <meta property="og:image" content="${post.portada}" />
+      <meta property="og:url" content="https://empatia-front.vercel.app/app/post/${post._id}" />
+      <meta property="og:type" content="article" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="${post.titulo}" />
+      <meta name="twitter:description" content="${post.epigrafe || ''}" />
+      <meta name="twitter:image" content="${post.portada}" />
+    </head>
+    <body>
+      <script>
+        window.location.href = "https://empatia-front.vercel.app/app/post/${post._id}";
+      </script>
+      <h1>Redirigiendo al contenido...</h1>
+    </body>
+    </html>`;
+  
+  res.setHeader('Content-Type', 'text/html');
+  return res.send(html);
+} else {
+  // Redirigir a SPA React si es un usuario común
+  return res.redirect(`https://empatia-front.vercel.app/app/post/${post._id}`);
+}
 
 // Puerto
 app.listen(process.env.PORT, () => {
