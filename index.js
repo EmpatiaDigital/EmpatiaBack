@@ -53,7 +53,7 @@ app.get("/post/:id", async (req, res) => {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).send("No encontrado");
 
-    const frontendUrl = `https://empatia-front.vercel.app/app/post/${post._id}`;
+    const frontendUrl = `https://empatia-front.vercel.app/post/${post.id}`;
 
     const html = `
       <!DOCTYPE html>
