@@ -48,7 +48,7 @@ mongoose.connect("mongodb+srv://empatiadigital2025:Gali282016@empatia.k2mcalb.mo
 // -----------------------------
 // RUTA ESPECIAL PARA METADATOS (LINK PREVIEW)
 // -----------------------------
-app.get("/preview/post/:id", async (req, res) => {
+app.get("preview/post/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).send("No encontrado en este backend por el momento");
