@@ -52,7 +52,7 @@ mongoose.connect("mongodb+srv://empatiadigital2025:Gali282016@empatia.k2mcalb.mo
 app.get("/post/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).send("No encontrado");
+    if (!post) return res.status(404).send("No encontrado papu este seria el de prueba el backend");
 
     const userAgent = req.headers['user-agent'] || "";
     const isBot = /facebook|twitter|whatsapp|discord|slack|telegram/i.test(userAgent.toLowerCase());
