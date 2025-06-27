@@ -76,7 +76,7 @@ app.get("/post/:id", async (req, res) => {
       <body>
         <script>
           // Redirige al frontend (React)
-          window.location.href = "/#/post/${post._id}";
+          window.location.href = "https://empatiadigital.com.ar/post/${post._id}";
         </script>
       </body>
       </html>
