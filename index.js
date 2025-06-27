@@ -13,7 +13,8 @@ const descargaRoutes = require('./routes/descargaRoutes');
 const testRoute = require('./routes/testRoute');
 const path = require("path");
 const userActividadRoutes = require('./routes/userActividad');
-
+// Tu modelo Post
+const Post = require("./models/Post");
 // Usamos las rutas
 dotenv.config();
 const app = express();
@@ -38,14 +39,17 @@ app.use('/api/descarga', descargaRoutes);
 app.use('/api', userActividadRoutes);
 
 
-// Ruta para compartir un post con metadatos
+
+
+
+
+
+// ---------------------
+// RUTA CON METADATOS DINÁMICOS
+// ---------------------
 app.get("/post/:id", async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const Post = require('./models/Post'); // Asegurate que tengas este modelo
-    const post = await Post.findById(id);
-
+    const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).send("Post no encontrado");
 
     const html = `
@@ -60,7 +64,7 @@ app.get("/post/:id", async (req, res) => {
         <meta property="og:title" content="${post.titulo}" />
         <meta property="og:description" content="${post.epigrafe || ""}" />
         <meta property="og:image" content="${post.portada}" />
-        <meta property="og:url" content="https://empatiadigital.com.ar/post/${post._id}" />
+        <meta property="og:url" content="https://empatia-front.vercel.app/post/${post._id}" />
         <meta property="og:type" content="article" />
 
         <!-- Twitter Card -->
@@ -71,6 +75,7 @@ app.get("/post/:id", async (req, res) => {
       </head>
       <body>
         <script>
+          // Redirige al frontend (React)
           window.location.href = "/#/post/${post._id}";
         </script>
       </body>
@@ -79,9 +84,11 @@ app.get("/post/:id", async (req, res) => {
 
     res.send(html);
   } catch (error) {
-    console.error("Error al obtener post para metadatos:", error);
-    res.status(500).send("Error interno del servidor");
+    console.error("Error al generar metadatos del post:", error);
+    res.status(500).send("Error del servidor");
   }
+});
+
 });
 
 
