@@ -49,51 +49,26 @@ mongoose.connect("mongodb+srv://empatiadigital2025:Gali282016@empatia.k2mcalb.mo
 // RUTA ESPECIAL PARA METADATOS (LINK PREVIEW)
 // -----------------------------
 app.get("/post/:id", async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
+  const post = await Post.findById(req.params.id);
+  if (!post) return res.status(404).send("No encontrado");
 
-    if (!post) return res.status(404).send("Post no encontrado");
-
-    const html = `
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="utf-8" />
-        <title>${post.titulo} | Empatía Digital</title>
-        <meta name="description" content="${post.epigrafe || ""}" />
-        <meta property="og:title" content="${post.titulo}" />
-        <meta property="og:description" content="${post.epigrafe || ""}" />
-        <meta property="og:image" content="${post.portada}" />
-        <meta property="og:url" content="https://empatia-front.vercel.app/post/${post._id}" />
-        <meta property="og:type" content="article" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="${post.titulo}" />
-        <meta name="twitter:description" content="${post.epigrafe || ""}" />
-        <meta name="twitter:image" content="${post.portada}" />
-      </head>
-      <body>
-        <script>
-          // Redirige al frontend React SPA
-          window.location.href = "https://empatia-front.vercel.app/post/${post._id}";
-        </script>
-      </body>
-      </html>
-    `;
-    res.send(html);
-  } catch (error) {
-    console.error("Error al generar HTML de metadatos:", error);
-    res.status(500).send("Error del servidor");
-  }
-});
-
-// -----------------------------
-// FRONTEND (React build estático)
-// -----------------------------
-app.use(express.static(path.join(__dirname, "EmpatiaFront/build"))); // ⚠️ CAMBIAR si tu carpeta React se llama distinto
-
-// TODAS LAS DEMÁS rutas van a React
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "EmpatiaFront/build", "index.html"));
+  const html = `
+    <html>
+    <head>
+      <meta property="og:title" content="${post.titulo}" />
+      <meta property="og:image" content="${post.portada}" />
+      <meta property="og:description" content="${post.epigrafe || ""}" />
+      <meta property="og:url" content="https://www.empatiadigital.com.ar/post/${post._id}" />
+      <!-- más metas -->
+    </head>
+    <body>
+      <script>
+        window.location.href = "/post/${post._id}";
+      </script>
+    </body>
+    </html>
+  `;
+  res.send(html);
 });
 
 
