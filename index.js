@@ -47,49 +47,49 @@ app.use('/api', userActividadRoutes);
 // ---------------------
 // RUTA CON METADATOS DINÁMICOS
 // ---------------------
-app.get("/post/:id", async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).send("Post no encontrado");
+// app.get("/post/:id", async (req, res) => {
+//   try {
+//     const post = await Post.findById(req.params.id);
+//     if (!post) return res.status(404).send("Post no encontrado");
 
-    const html = `
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="utf-8" />
-        <title>${post.titulo} | Empatía Digital</title>
-        <meta name="description" content="${post.epigrafe || ""}" />
+//     const html = `
+//       <!DOCTYPE html>
+//       <html lang="es">
+//       <head>
+//         <meta charset="utf-8" />
+//         <title>${post.titulo} | Empatía Digital</title>
+//         <meta name="description" content="${post.epigrafe || ""}" />
 
-        <!-- Open Graph -->
-        <meta property="og:title" content="${post.titulo}" />
-        <meta property="og:description" content="${post.epigrafe || ""}" />
-        <meta property="og:image" content="${post.portada}" />
-        <meta property="og:url" content="https://empatiadigital.com.ar/post/${post._id}" />
-        <meta property="og:type" content="article" />
+//         <!-- Open Graph -->
+//         <meta property="og:title" content="${post.titulo}" />
+//         <meta property="og:description" content="${post.epigrafe || ""}" />
+//         <meta property="og:image" content="${post.portada}" />
+//         <meta property="og:url" content="https://empatiadigital.com.ar/post/${post._id}" />
+//         <meta property="og:type" content="article" />
 
-        <!-- Twitter Card -->
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="${post.titulo}" />
-        <meta name="twitter:description" content="${post.epigrafe || ""}" />
-        <meta name="twitter:image" content="${post.portada}" />
-      </head>
-      <body>
-        <script>
-          // Redirige al frontend (React)
-          window.location.href = "https://empatiadigital.com.ar/post/${post._id}";
-        </script>
-      </body>
-      </html>
-    `;
+//         <!-- Twitter Card -->
+//         <meta name="twitter:card" content="summary_large_image" />
+//         <meta name="twitter:title" content="${post.titulo}" />
+//         <meta name="twitter:description" content="${post.epigrafe || ""}" />
+//         <meta name="twitter:image" content="${post.portada}" />
+//       </head>
+//       <body>
+//         <script>
+//           // Redirige al frontend (React)
+//           window.location.href = "https://empatiadigital.com.ar/post/${post._id}";
+//         </script>
+//       </body>
+//       </html>
+//     `;
 
-    res.send(html);
-  } catch (error) {
-    console.error("Error al generar metadatos del post:", error);
-    res.status(500).send("Error del servidor");
-  }
-});
+//     res.send(html);
+//   } catch (error) {
+//     console.error("Error al generar metadatos del post:", error);
+//     res.status(500).send("Error del servidor");
+//   }
+// });
 
-});
+// });
 
 
 // Conexión a la base de datos
