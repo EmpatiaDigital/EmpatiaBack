@@ -49,26 +49,48 @@ mongoose.connect("mongodb+srv://empatiadigital2025:Gali282016@empatia.k2mcalb.mo
 // RUTA ESPECIAL PARA METADATOS (LINK PREVIEW)
 // -----------------------------
 app.get("/post/:id", async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) return res.status(404).send("No encontrado");
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).send("No encontrado");
 
-  const html = `
-    <html>
-    <head>
-      <meta property="og:title" content="${post.titulo}" />
-      <meta property="og:image" content="${post.portada}" />
-      <meta property="og:description" content="${post.epigrafe || ""}" />
-      <meta property="og:url" content="https://www.empatiadigital.com.ar/post/${post._id}" />
-      <!-- más metas -->
-    </head>
-    <body>
-      <script>
-        window.location.href = "/post/${post._id}";
-      </script>
-    </body>
-    </html>
-  `;
-  res.send(html);
+    const userAgent = req.headers['user-agent'] || "";
+    const isBot = /facebook|twitter|whatsapp|discord|slack|telegram/i.test(userAgent);
+
+    if (isBot) {
+      // Para bots: enviá meta tags con la info del post
+      const html = `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8" />
+          <title>${post.titulo}</title>
+          <meta name="description" content="${post.epigrafe || ''}" />
+          <meta property="og:title" content="${post.titulo}" />
+          <meta property="og:description" content="${post.epigrafe || ''}" />
+          <meta property="og:image" content="${post.portada}" />
+          <meta property="og:url" content="https://www.empatiadigital.com.ar/post/${post._id}" />
+          <meta property="og:type" content="article" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="${post.titulo}" />
+          <meta name="twitter:description" content="${post.epigrafe || ''}" />
+          <meta name="twitter:image" content="${post.portada}" />
+        </head>
+        <body>
+          <h1>Redirigiendo...</h1>
+        </body>
+        </html>
+      `;
+      res.setHeader('Content-Type', 'text/html');
+      return res.send(html);
+    } else {
+      // Para usuarios humanos: redirigí a la app React que maneja /post/:id
+      return res.redirect(`https://www.empatiadigital.com.ar/app/post/${post._id}`);
+      // Cambiá "/app/#/post/" por la ruta real que usás en React para mostrar el post
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Error del servidor");
+  }
 });
 
 
