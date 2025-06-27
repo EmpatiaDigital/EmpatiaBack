@@ -53,10 +53,7 @@ app.get("/post/:id", async (req, res) => {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).send("No encontrado");
 
-    const userAgent = req.headers['user-agent'] || "";
-    const isBot = /facebook|twitter|whatsapp|discord|slack|telegram|linkedin|bot|crawler|spider/i.test(userAgent.toLowerCase());
-
-    const redirectUrl = `https://empatia-front.vercel.app/app/post/${post._id}`;
+    const frontendUrl = `https://empatia-front.vercel.app/app/post/${post._id}`;
 
     const html = `
       <!DOCTYPE html>
@@ -68,7 +65,7 @@ app.get("/post/:id", async (req, res) => {
         <meta property="og:title" content="${post.titulo}" />
         <meta property="og:description" content="${post.epigrafe || ''}" />
         <meta property="og:image" content="${post.portada}" />
-        <meta property="og:url" content="${redirectUrl}" />
+        <meta property="og:url" content="${frontendUrl}" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="${post.titulo}" />
@@ -77,24 +74,25 @@ app.get("/post/:id", async (req, res) => {
       </head>
       <body>
         <script>
-          window.location.href = "${redirectUrl}";
+          // Redirección automática al frontend
+          window.location.href = "${frontendUrl}";
         </script>
         <noscript>
-          <meta http-equiv="refresh" content="0; url=${redirectUrl}" />
+          <meta http-equiv="refresh" content="0; url=${frontendUrl}" />
         </noscript>
-        <h1>Redirigiendo...</h1>
+        <h1>Redirigiendo a Empatía Digital...</h1>
       </body>
       </html>
     `;
 
     res.setHeader('Content-Type', 'text/html');
     return res.send(html);
+
   } catch (error) {
     console.error(error);
     return res.status(500).send("Error del servidor");
   }
 });
-
 
 // Puerto
 app.listen(process.env.PORT, () => {
