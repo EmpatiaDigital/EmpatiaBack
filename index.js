@@ -48,7 +48,7 @@ mongoose.connect("mongodb+srv://empatiadigital2025:Gali282016@empatia.k2mcalb.mo
 // -----------------------------
 // RUTA ESPECIAL PARA METADATOS (LINK PREVIEW)
 // -----------------------------
-app.get("/post/:id", async (req, res) => {
+app.get("/preview/post/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).send("No encontrado");
@@ -74,7 +74,6 @@ app.get("/post/:id", async (req, res) => {
       </head>
       <body>
         <script>
-          // Redirección automática al frontend
           window.location.href = "${frontendUrl}";
         </script>
         <noscript>
@@ -87,12 +86,12 @@ app.get("/post/:id", async (req, res) => {
 
     res.setHeader('Content-Type', 'text/html');
     return res.send(html);
-
   } catch (error) {
     console.error(error);
     return res.status(500).send("Error del servidor");
   }
 });
+
 
 // Puerto
 app.listen(process.env.PORT, () => {
